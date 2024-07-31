@@ -1,0 +1,303 @@
+\doxysection{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classopen__cpp__utils_1_1directed__tree}{}\label{classopen__cpp__utils_1_1directed__tree}\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+
+
+Class for creating a directed tree.  
+
+
+
+
+{\ttfamily \#include $<$directed\+\_\+tree.\+h$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_1_1breadth__first}{breadth\+\_\+first}}
+\begin{DoxyCompactList}\small\item\em Breadth first traversal. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_1_1in__order}{in\+\_\+order}}
+\begin{DoxyCompactList}\small\item\em In-\/order traversal. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_1_1post__order}{post\+\_\+order}}
+\begin{DoxyCompactList}\small\item\em Post-\/order traversal. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_1_1pre__order}{pre\+\_\+order}}
+\begin{DoxyCompactList}\small\item\em Pre-\/order traversal. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_1_1traverser}{traverser}}
+\begin{DoxyCompactList}\small\item\em Visitor pattern for traversing the tree. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a7686e85b333769bb5e1de055bb760dd4}\label{classopen__cpp__utils_1_1directed__tree_a7686e85b333769bb5e1de055bb760dd4} 
+using {\bfseries data\+\_\+type} = T
+\item 
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a9646a01e68ac858ca7e502b74770a763}\label{classopen__cpp__utils_1_1directed__tree_a9646a01e68ac858ca7e502b74770a763} 
+using {\bfseries node} = uint32\+\_\+t
+\item 
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_ad2c88a1f3d165568d9d05b5c9abebd54}\label{classopen__cpp__utils_1_1directed__tree_ad2c88a1f3d165568d9d05b5c9abebd54} 
+using {\bfseries node\+\_\+queue} = std\+::deque$<$node$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a274ff5c1261c76482ae0539bcd7db282}\label{classopen__cpp__utils_1_1directed__tree_a274ff5c1261c76482ae0539bcd7db282} 
+{\bfseries directed\+\_\+tree} ()
+\begin{DoxyCompactList}\small\item\em Default constructor, creates tree with empty root. \end{DoxyCompactList}\item 
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_a3c5c1406f23aaafa8853670cd8c09e37}{parent}} (node id) const
+\begin{DoxyCompactList}\small\item\em Get the parent of a node. O(1) \end{DoxyCompactList}\item 
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_a4724d2a3787f09eb632687cbb8d3b392}{first\+\_\+child}} (node id) const
+\begin{DoxyCompactList}\small\item\em Get the first child of a node. O(1) \end{DoxyCompactList}\item 
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_a2894ba29c0eccf98b50bab5c07fcdf40}{prev\+\_\+sibling}} (node id) const
+\begin{DoxyCompactList}\small\item\em Get the previous sibling of a node. O(1) \end{DoxyCompactList}\item 
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_a2b5a157313e8c92a68d041d1b33514d4}{next\+\_\+sibling}} (node id) const
+\begin{DoxyCompactList}\small\item\em Get the next sibling of a node. O(1) \end{DoxyCompactList}\item 
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_a9a03a3bc0948881348a72d5c21390542}{left\+\_\+most}} (node id) const
+\begin{DoxyCompactList}\small\item\em Get the left most child of a node. O(log(n)) \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_aa1c7419056d969b7596a0fa1616f3a11}{depth}} (node id) const
+\begin{DoxyCompactList}\small\item\em Get the depth of a node. \end{DoxyCompactList}\item 
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_a1a23d372ff1a58609686dcbc0e979cdd}{insert}} (const data\+\_\+type \&data, node p\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Insert a node into the tree as a child of the provided node. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_a03aa9c0faf8c6985cc8e8b22c4dabe18}{erase}} (node id)
+\begin{DoxyCompactList}\small\item\em Erase a node in the tree. \end{DoxyCompactList}\item 
+data\+\_\+type \& \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_afe497db6dba649dccc3520adc6ee87ac}{operator\mbox{[}$\,$\mbox{]}}} (node id)
+\begin{DoxyCompactList}\small\item\em Getter for data associated with a node. \end{DoxyCompactList}\item 
+const data\+\_\+type \& \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_ae640e0a2ecf325d9f0f9253341d0ce2d}{operator\mbox{[}$\,$\mbox{]}}} (node id) const
+\begin{DoxyCompactList}\small\item\em Constant getter for data associated with a node. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename O  = pre\+\_\+order, typename V $>$ }\\void \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree_aae5dccf63007f5094122dee8fdae986e}{traverse}} (V \&visitor)
+\begin{DoxyCompactList}\small\item\em Traverser-\/\+Visitor pattern for accessing the tree. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a74286185311460f83ab9bf5d1ba82e98}\label{classopen__cpp__utils_1_1directed__tree_a74286185311460f83ab9bf5d1ba82e98} 
+static constexpr \mbox{\hyperlink{structopen__cpp__utils_1_1constant__value}{constant\+\_\+value}}$<$ node, node(0)$>$ {\bfseries root} \{\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree$<$ T $>$}
+Class for creating a directed tree. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Type of the data associated with each node\\
+\hline
+\end{DoxyTemplParams}
+The tree is a series of child nodes in forward linked lists. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_aa1c7419056d969b7596a0fa1616f3a11}\label{classopen__cpp__utils_1_1directed__tree_aa1c7419056d969b7596a0fa1616f3a11} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!depth@{depth}}
+\index{depth@{depth}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{depth()}{depth()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+uint32\+\_\+t \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::depth (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the depth of a node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a03aa9c0faf8c6985cc8e8b22c4dabe18}\label{classopen__cpp__utils_1_1directed__tree_a03aa9c0faf8c6985cc8e8b22c4dabe18} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!erase@{erase}}
+\index{erase@{erase}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{erase()}{erase()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::erase (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Erase a node in the tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Id of the node to erase \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a4724d2a3787f09eb632687cbb8d3b392}\label{classopen__cpp__utils_1_1directed__tree_a4724d2a3787f09eb632687cbb8d3b392} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!first\_child@{first\_child}}
+\index{first\_child@{first\_child}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{first\_child()}{first\_child()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::first\+\_\+child (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the first child of a node. O(1) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Node id to reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Node id of the first child 
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a1a23d372ff1a58609686dcbc0e979cdd}\label{classopen__cpp__utils_1_1directed__tree_a1a23d372ff1a58609686dcbc0e979cdd} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!insert@{insert}}
+\index{insert@{insert}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::insert (\begin{DoxyParamCaption}\item[{const data\+\_\+type \&}]{data,  }\item[{node}]{p\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Insert a node into the tree as a child of the provided node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & Value to insert \\
+\hline
+{\em p\+\_\+id} & Id of the parent node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Id of the inserted node 
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a9a03a3bc0948881348a72d5c21390542}\label{classopen__cpp__utils_1_1directed__tree_a9a03a3bc0948881348a72d5c21390542} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!left\_most@{left\_most}}
+\index{left\_most@{left\_most}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{left\_most()}{left\_most()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::left\+\_\+most (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the left most child of a node. O(log(n)) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Node id to reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Node id of the left most child 
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a2b5a157313e8c92a68d041d1b33514d4}\label{classopen__cpp__utils_1_1directed__tree_a2b5a157313e8c92a68d041d1b33514d4} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!next\_sibling@{next\_sibling}}
+\index{next\_sibling@{next\_sibling}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{next\_sibling()}{next\_sibling()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::next\+\_\+sibling (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the next sibling of a node. O(1) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Node id to reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Node id of the next sibling in the linked list 
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_afe497db6dba649dccc3520adc6ee87ac}\label{classopen__cpp__utils_1_1directed__tree_afe497db6dba649dccc3520adc6ee87ac} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+data\+\_\+type \& \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Getter for data associated with a node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Id of the node to access \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the node\textquotesingle{}s data 
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_ae640e0a2ecf325d9f0f9253341d0ce2d}\label{classopen__cpp__utils_1_1directed__tree_ae640e0a2ecf325d9f0f9253341d0ce2d} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+const data\+\_\+type \& \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constant getter for data associated with a node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & Id of the node to access \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the node\textquotesingle{}s data 
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a3c5c1406f23aaafa8853670cd8c09e37}\label{classopen__cpp__utils_1_1directed__tree_a3c5c1406f23aaafa8853670cd8c09e37} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!parent@{parent}}
+\index{parent@{parent}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{parent()}{parent()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::parent (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the parent of a node. O(1) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Node id to reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Node id of the parent 
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_a2894ba29c0eccf98b50bab5c07fcdf40}\label{classopen__cpp__utils_1_1directed__tree_a2894ba29c0eccf98b50bab5c07fcdf40} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!prev\_sibling@{prev\_sibling}}
+\index{prev\_sibling@{prev\_sibling}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{prev\_sibling()}{prev\_sibling()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+node \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::prev\+\_\+sibling (\begin{DoxyParamCaption}\item[{node}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the previous sibling of a node. O(1) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Node id to reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Node id of the next sibling in the linked list 
+\end{DoxyReturn}
+\Hypertarget{classopen__cpp__utils_1_1directed__tree_aae5dccf63007f5094122dee8fdae986e}\label{classopen__cpp__utils_1_1directed__tree_aae5dccf63007f5094122dee8fdae986e} 
+\index{open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}!traverse@{traverse}}
+\index{traverse@{traverse}!open\_cpp\_utils::directed\_tree$<$ T $>$@{open\_cpp\_utils::directed\_tree$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{traverse()}{traverse()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+template$<$typename O  = pre\+\_\+order, typename V $>$ \\
+void \mbox{\hyperlink{classopen__cpp__utils_1_1directed__tree}{open\+\_\+cpp\+\_\+utils\+::directed\+\_\+tree}}$<$ T $>$\+::traverse (\begin{DoxyParamCaption}\item[{V \&}]{visitor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Traverser-\/\+Visitor pattern for accessing the tree. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Visitor type. \\
+\hline
+{\em O} & Order type. Defaults to Pre-\/\+Order Traversal. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em visitor} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+directed\+\_\+tree.\+h\end{DoxyCompactItemize}

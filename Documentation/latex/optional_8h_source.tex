@@ -1,0 +1,75 @@
+\doxysection{optional.\+h}
+\hypertarget{optional_8h_source}{}\label{optional_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Copyright\ 2024\ Medusa\ Slockbower}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Licensed\ under\ the\ Apache\ License,\ Version\ 2.0\ (the\ "{}License"{});}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ \ http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ limitations\ under\ the\ License.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifndef\ OPTIONAL\_H}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ OPTIONAL\_H}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }open\_cpp\_utils}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}}
+\DoxyCodeLine{00023\ \ \ \ \ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }value\_type\ =\ T;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}()\ :\ data\_(),\ valid\_(\textcolor{keyword}{false})\ \{\ \}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}(\textcolor{keyword}{const}\ value\_type\&\ data)\ :\ data\_(data),\ valid\_(\textcolor{keyword}{true})\ \{\ \}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}(value\_type\&\&\ data)\ :\ data\_(data),\ valid\_(\textcolor{keyword}{true})\ \{\ \}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}\&\ other)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}(\mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}\&\&\ other)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}\&\ other)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}\&\ operator=(\mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}\&\&\ other)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}\&\ operator=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \{\ data\_\ =\ data;\ valid\_\ =\ \textcolor{keyword}{true};\ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1optional}{optional}}\&\ operator=(value\_type\&\&\ data)\ \{\ data\_\ =\ data;\ valid\_\ =\ \textcolor{keyword}{true};\ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ value\_type\&\ operator+=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \{\ assert(valid\_);\ data\_\ +=\ data;\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ value\_type\&\ operator-\/=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \{\ assert(valid\_);\ data\_\ +=\ data;\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ value\_type\&\ operator*=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \{\ assert(valid\_);\ data\_\ +=\ data;\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ value\_type\&\ operator/=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \{\ assert(valid\_);\ data\_\ +=\ data;\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ value\_type\&\ operator\%=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \{\ assert(valid\_);\ data\_\ +=\ data;\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ value\_type\&\ operator<<=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \{\ assert(valid\_);\ data\_\ <<=\ data;\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ value\_type\&\ operator>>=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \{\ assert(valid\_);\ data\_\ >>=\ data;\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ value\_type\&\ operator|=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \ \{\ assert(valid\_);\ data\_\ |=\ data;\ \ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ value\_type\&\ operator\&=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \ \{\ assert(valid\_);\ data\_\ \&=\ data;\ \ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ value\_type\&\ operator\string^=(\textcolor{keyword}{const}\ value\_type\&\ data)\ \ \{\ assert(valid\_);\ data\_\ \string^=\ data;\ \ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ operator()()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ valid\_;\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{operator}\ \ \ \ \ \ \ value\_type\&()\ \ \ \ \ \ \ \{\ assert(valid\_);\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keyword}{operator}\ \textcolor{keyword}{const}\ value\_type\&()\ \textcolor{keyword}{const}\ \{\ assert(valid\_);\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\_type*\ operator-\/>()\ \ \ \ \ \ \ \{\ assert(valid\_);\ \textcolor{keywordflow}{return}\ \&data\_;\ \}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ value\_type*\ operator-\/>()\textcolor{keyword}{\ const\ }\{\ assert(valid\_);\ \textcolor{keywordflow}{return}\ \&data\_;\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\_type\&\ operator*()\ \ \ \ \ \ \ \ \{\ assert(valid\_);\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ value\_type\&\ operator*()\textcolor{keyword}{\ const\ \ }\{\ assert(valid\_);\ \textcolor{keywordflow}{return}\ data\_;\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ reset()\ \{\ valid\_\ =\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ value\_type\ data\_;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ valid\_;}
+\DoxyCodeLine{00067\ \ \ \ \ \};}
+\DoxyCodeLine{00068\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//OPTIONAL\_H}}
+
+\end{DoxyCode}

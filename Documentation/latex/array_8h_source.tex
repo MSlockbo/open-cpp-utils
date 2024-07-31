@@ -1,0 +1,67 @@
+\doxysection{array.\+h}
+\hypertarget{array_8h_source}{}\label{array_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Maddie\ on\ 7/25/2024.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ ARRAY\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ ARRAY\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{template__utils_8h}{template\_utils.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }open\_cpp\_utils}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ Forward\ Definitions}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00020\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{size\_t}\ N>\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array}{fixed\_array}};}
+\DoxyCodeLine{00021\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{size\_t}\ N>\ \textcolor{keyword}{class\ \ }\mbox{\hyperlink{classopen__cpp__utils_1_1dyn__array}{dyn\_array}};}
+\DoxyCodeLine{00022\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{size\_t}\ N>\ \textcolor{keyword}{using\ \ }\mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array_3_01_t_00_01_n_01_4}{array}}\ =\ \mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array}{fixed\_array<T,\ N>}};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Fixed\ Array}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{size\_t}\ N>}
+\DoxyCodeLine{00035\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array}{fixed\_array}}<T,\ N>}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ Typedefs\ ============================================================================================================}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{using\ }value\_type\ =\ T;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{using\ }array\_type\ =\ value\_type[N];}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{using\ }size\_type\ =\ size\_t;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ Functions\ ===========================================================================================================}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ Constructors\ \&\ Destructor\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array}{fixed\_array}}()\ :\ data\_\{\ T()\ \}\ \{\}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array}{fixed\_array}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array}{fixed\_array}}\&\ \mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array_3_01_t_00_01_n_01_4}{array}})\ :\ data\_\{\ \mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array_3_01_t_00_01_n_01_4}{array}}.data\_\ \}\ \{\}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{structopen__cpp__utils_1_1fixed__array}{fixed\_array}}(\textcolor{keyword}{const}\ array\_type\&\ data)\ :\ data\_\{\ data\ \}\ \{\}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{constexpr}\ size\_type\ size()\ \{\ \textcolor{keywordflow}{return}\ N;\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ Variables\ ===========================================================================================================}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00060\ \ \ \ \ array\_type\ data\_;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//ARRAY\_H}}
+
+\end{DoxyCode}

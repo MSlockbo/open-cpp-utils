@@ -1,0 +1,53 @@
+\doxysection{template\+\_\+utils.\+h File Reference}
+\hypertarget{template__utils_8h}{}\label{template__utils_8h}\index{template\_utils.h@{template\_utils.h}}
+
+
+Provides compile time evaluation utilities for templates and template packs.  
+
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structopen__cpp__utils_1_1constant__value}{open\+\_\+cpp\+\_\+utils\+::constant\+\_\+value$<$ T, V $>$}}
+\begin{DoxyCompactList}\small\item\em Compile-\/time constant value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$bool V$>$ }\\using \mbox{\hyperlink{template__utils_8h_a74d5cb86637293f20ed9afa2d8b31b2c}{open\+\_\+cpp\+\_\+utils\+::bool\+\_\+constant}} = \mbox{\hyperlink{structopen__cpp__utils_1_1constant__value}{constant\+\_\+value}}$<$bool, V$>$
+\begin{DoxyCompactList}\small\item\em Compile-\/time constant boolean value. \end{DoxyCompactList}\item 
+\Hypertarget{template__utils_8h_ae3d98e273a29dae107e182245e79ed5a}\label{template__utils_8h_ae3d98e273a29dae107e182245e79ed5a} 
+using {\bfseries open\+\_\+cpp\+\_\+utils\+::true\+\_\+type} = \mbox{\hyperlink{template__utils_8h_a74d5cb86637293f20ed9afa2d8b31b2c}{bool\+\_\+constant}}$<$true$>$
+\begin{DoxyCompactList}\small\item\em Constant True value. \end{DoxyCompactList}\item 
+\Hypertarget{template__utils_8h_a4ac0ee6113dff45d27ed390839625f7f}\label{template__utils_8h_a4ac0ee6113dff45d27ed390839625f7f} 
+using {\bfseries open\+\_\+cpp\+\_\+utils\+::false\+\_\+type} = \mbox{\hyperlink{template__utils_8h_a74d5cb86637293f20ed9afa2d8b31b2c}{bool\+\_\+constant}}$<$false$>$
+\begin{DoxyCompactList}\small\item\em Constant False value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{template__utils_8h_a3be9237e3c8b624b8e25579c7ad42c96}\label{template__utils_8h_a3be9237e3c8b624b8e25579c7ad42c96} 
+{\footnotesize template$<$typename T , typename... Ts$>$ }\\constexpr bool {\bfseries open\+\_\+cpp\+\_\+utils\+::is\+\_\+unique$<$ T, Ts... $>$} = \mbox{\hyperlink{template__utils_8h_a74d5cb86637293f20ed9afa2d8b31b2c}{bool\+\_\+constant}}$<$(!is\+\_\+same$<$T, Ts$>$ \&\& ...) \&\& is\+\_\+unique$<$Ts...$>$$>$\{\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Provides compile time evaluation utilities for templates and template packs. 
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{template__utils_8h_a74d5cb86637293f20ed9afa2d8b31b2c}\label{template__utils_8h_a74d5cb86637293f20ed9afa2d8b31b2c} 
+\index{template\_utils.h@{template\_utils.h}!bool\_constant@{bool\_constant}}
+\index{bool\_constant@{bool\_constant}!template\_utils.h@{template\_utils.h}}
+\doxysubsubsection{\texorpdfstring{bool\_constant}{bool\_constant}}
+{\footnotesize\ttfamily template$<$bool V$>$ \\
+using \mbox{\hyperlink{template__utils_8h_a74d5cb86637293f20ed9afa2d8b31b2c}{open\+\_\+cpp\+\_\+utils\+::bool\+\_\+constant}} = constant\+\_\+value$<$bool, V$>$}
+
+
+
+Compile-\/time constant boolean value. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Value \\
+\hline
+\end{DoxyTemplParams}

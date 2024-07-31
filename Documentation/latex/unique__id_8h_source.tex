@@ -1,0 +1,48 @@
+\doxysection{unique\+\_\+id.\+h}
+\hypertarget{unique__id_8h_source}{}\label{unique__id_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Copyright\ 2024\ Medusa\ Slockbower}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Licensed\ under\ the\ Apache\ License,\ Version\ 2.0\ (the\ "{}License"{});}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ \ http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ limitations\ under\ the\ License.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifndef\ ENGINE\_UNIQUEID\_H}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ ENGINE\_UNIQUEID\_H}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}types.h"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }open\_cpp\_utils}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ Internal\ function\ for\ incrementing\ an\ id\ associated\ with\ a\ type}}
+\DoxyCodeLine{00025\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Base>\ uint64\_t\ \_increment\_id()}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{static}\ uint64\_t\ current\ =\ 0;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordflow}{return}\ current++;}
+\DoxyCodeLine{00029\ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Base,\ \textcolor{keyword}{typename}\ Type>\ uint64\_t\ unique\_id()}
+\DoxyCodeLine{00045\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ initialized\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{static}\ uint64\_t\ \textcolor{keywordtype}{id}\ =\ 0;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{if}(initialized)\ \textcolor{keywordflow}{return}\ id;}
+\DoxyCodeLine{00050\ \ \ \ \ initialized\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{id}\ =\ \_increment\_id<Base>();}
+\DoxyCodeLine{00052\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//ENGINE\_UNIQUEID\_H}}
+
+\end{DoxyCode}

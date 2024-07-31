@@ -1,0 +1,89 @@
+\doxysection{any.\+h}
+\hypertarget{any_8h_source}{}\label{any_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Copyright\ 2024\ Medusa\ Slockbower}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Licensed\ under\ the\ Apache\ License,\ Version\ 2.0\ (the\ "{}License"{});}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ \ http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ limitations\ under\ the\ License.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ =====================================================================================================================}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifndef\ ANY\_H}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ ANY\_H}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{template__utils_8h}{template\_utils.h}}"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }open\_cpp\_utils}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}...Ts>\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}...Rest>}
+\DoxyCodeLine{00031\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}<T,\ Rest...>\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}<Rest...>}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Assertions\ ==========================================================================================================}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{static\_assert}(is\_unique<Rest...>);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ Typedefs\ ============================================================================================================}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classopen__cpp__utils_1_1any}{base\_type}}\ =\ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}<Rest...>;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{using\ }this\_type\ =\ T;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ Constructors\ ========================================================================================================}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{base\_type}}()\ \ \ \ \ \ \ \ ,\ Value()\ \{\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}(\textcolor{keyword}{const}\ this\_type\&\ value,\ \textcolor{keyword}{const}\ Rest\&...other)\ :\ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{base\_type}}(other...),\ Value(value)\ \{\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}(this\_type\&\&\ value,\ Rest\&\&...other)\ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{base\_type}}(other...),\ Value(value)\ \{\ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}\&\ other)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}(\mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}\&\&\ other)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{\string~any}}()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ Operators\ ===========================================================================================================}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ Assignment\ operators\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}\&\ operator=(\mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}\&\&)\ \ \ \ \ \ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ Cast\ operators\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{operator}\ \ \ \ \ \ \ this\_type\ \ ()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \ Value;\ \}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{operator}\ \ \ \ \ \ \ this\_type\&\ ()\ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{return}\ \ Value;\ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{operator}\ \textcolor{keyword}{const}\ this\_type\&\ ()\ \textcolor{keyword}{const}\ \{\ \textcolor{keywordflow}{return}\ \ Value;\ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{operator}\ \ \ \ \ \ \ this\_type\&\&()\ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{return}\ \ Value;\ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{operator}\ \ \ \ \ \ \ this\_type*\ ()\ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{return}\ \&Value;\ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{operator}\ \textcolor{keyword}{const}\ this\_type*\ ()\ \textcolor{keyword}{const}\ \{\ \textcolor{keywordflow}{return}\ \&Value;\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//\ Variables\ ===========================================================================================================}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ Size\ =\ \textcolor{keyword}{sizeof}...(Rest);}
+\DoxyCodeLine{00079\ \ \ \ \ this\_type\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Value;}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00083\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classopen__cpp__utils_1_1any}{any}}<>\ \{\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//ANY\_H}}
+
+\end{DoxyCode}
