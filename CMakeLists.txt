@@ -2,15 +2,34 @@ cmake_minimum_required(VERSION 3.5)
 
 project(open-cpp-utils)
 
-add_library(open-cpp-utils INTERFACE
+set(OPENCPPUTILS_HEADERS
         any.h
         directed_tree.h
-        startup.h
         optional.h
+        startup.h
         template_utils.h
-        unique_id.h
-        array.h
         types.h
+        unique_id.h
+)
+
+add_library(open-cpp-utils INTERFACE
+        ${OPENCPPUTILS_HEADERS}
+)
+
+# Set CPP Standard
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_C_STANDARD 23)
+
+find_package(GTest)
+
+add_executable(open-cpp-utils-test
+        Test/Test.cpp
+
+        ${OPENCPPUTILS_HEADERS}
+)
+
+target_link_libraries(open-cpp-utils-test PRIVATE
+        GTest::gtest
 )
 
 # DOXYGEN ==============================================================================================================

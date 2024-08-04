@@ -16,6 +16,8 @@
 #ifndef OPTIONAL_H
 #define OPTIONAL_H
 
+#include <assert.h>
+
 namespace open_cpp_utils
 {
     template<typename T>

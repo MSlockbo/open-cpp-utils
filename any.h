@@ -64,12 +64,8 @@ public:
 
 // Cast operators ------------------------------------------------------------------------------------------------------
 
-    operator       this_type  () const { return  Value; }
     operator       this_type& ()       { return  Value; }
     operator const this_type& () const { return  Value; }
-    operator       this_type&&()       { return  Value; }
-    operator       this_type* ()       { return &Value; }
-    operator const this_type* () const { return &Value; }
 
 
 // Variables ===========================================================================================================
