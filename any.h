@@ -39,7 +39,12 @@ class any<T, Rest...> : public any<Rest...>
 
 public:
     using base_type = any<Rest...>;
-    using this_type = T;
+
+    using this_type       = T;
+    using reference       = T&;
+    using const_reference = const T&;
+    using pointer         = T*;
+    using const_pointer   = const T*;
 
 
 // Constructors ========================================================================================================
@@ -64,8 +69,10 @@ public:
 
 // Cast operators ------------------------------------------------------------------------------------------------------
 
-    operator       this_type& ()       { return  Value; }
-    operator const this_type& () const { return  Value; }
+    operator       reference()       { return  Value; }
+    operator const_reference() const { return  Value; }
+    operator         pointer()       { return &Value; }
+    operator   const_pointer() const { return &Value; }
 
 
 // Variables ===========================================================================================================

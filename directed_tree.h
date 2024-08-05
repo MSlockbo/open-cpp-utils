@@ -60,7 +60,7 @@ private:
 // Constants ===========================================================================================================
 
 public:
-    static constexpr std::constant_value<node, 0> root{};
+    static constexpr std::integral_constant<node, 0> root{};
 
 
 // Data Structures =====================================================================================================
@@ -295,11 +295,11 @@ public:
     class unordered
     {
     public:
-        unordered(directed_tree& graph) : graph_(graph), current_(graph.root) { }
+        unordered(directed_tree& graph) : graph_(graph), current_(root) { }
 
         node operator()(node id)
         {
-            while(!graph_.valid(current_))
+            while(!graph_.valid(current_) || current_ == root)
             {
                 ++current_;
             }
@@ -307,7 +307,7 @@ public:
             id = current_;
             current_ ++;
 
-            return id == graph_.graph_.;
+            return id == graph_.graph_.size() ? 0 : id;
         }
 
     private:

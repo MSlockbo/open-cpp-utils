@@ -16,7 +16,7 @@
 #ifndef ENGINE_UNIQUEID_H
 #define ENGINE_UNIQUEID_H
 
-#include "types.h"
+#include <cstdint>
 
 namespace open_cpp_utils
 {
