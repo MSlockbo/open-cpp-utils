@@ -1,0 +1,9 @@
+{
+  "name" : "open-cpp-utils",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "7a57b42f959ad138a5283477fe2e6c97a7cb852f",
+  "dependencies" : [ {
+    "name" : "gtest",
+    "version>=" : "1.14.0#1"
+  } ]
+}

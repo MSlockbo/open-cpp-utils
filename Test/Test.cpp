@@ -15,8 +15,11 @@
 
 #include <gtest/gtest.h>
 
+#include "../object_pool.h"
+
 
 int main(char** args, int argc)
 {
+    open_cpp_utils::object_pool<int> test;
     return 0;
 }

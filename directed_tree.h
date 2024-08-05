@@ -16,7 +16,8 @@
 #ifndef DIRECTEDGRAPH_H
 #define DIRECTEDGRAPH_H
 
-#include "template_utils.h"
+#include <vector>
+#include <deque>
 
 namespace open_cpp_utils
 {
@@ -38,6 +39,7 @@ public:
 	class pre_order;
 	class in_order;
 	class post_order;
+    class unordered;
 
 private:
     struct director;
@@ -46,8 +48,8 @@ private:
 // Typedefs ============================================================================================================
 
 public:
-	using data_type = T;
-	using node = uint32_t;
+	using data_type  = T;
+	using node       = uint32_t;
 	using node_queue = std::deque<node>;
 
 private:
@@ -58,7 +60,7 @@ private:
 // Constants ===========================================================================================================
 
 public:
-    static constexpr constant_value<node, node(0)> root{};
+    static constexpr std::constant_value<node, 0> root{};
 
 
 // Data Structures =====================================================================================================
@@ -74,7 +76,7 @@ private:
 		node parent, child, prev_sibling, next_sibling;
 		uint32_t flags, depth;
 
-		director() : parent(0), child(0), prev_sibling(0), next_sibling(0), flags(VALID) { }
+		director() : parent(0), child(0), prev_sibling(0), next_sibling(0), flags(VALID), depth(0) { }
 	};
 
 
@@ -82,7 +84,7 @@ private:
 
 public:
 
-// Constructors & Destructor ---------------------------------------------------------------------------------------
+// Constructors & Destructor -------------------------------------------------------------------------------------------
 
     /**
      * \brief Default constructor, creates tree with empty root
@@ -90,7 +92,14 @@ public:
     directed_tree() : graph_{ director() }, data_{ data_type() }, freed_{ } { }
 
 
-// Tree Navigation -------------------------------------------------------------------------------------------------
+// Tree Navigation -----------------------------------------------------------------------------------------------------
+
+    /**
+     * \brief Check whether a node is valid. O(1)
+     * \param id Node id to reference
+     * \return Whether the valid flag is true in the node
+     */
+    [[nodiscard]] bool valid(node id) const { return graph_[id].flags & director::VALID; }
 
     /**
      * \brief Get the parent of a node. O(1)
@@ -159,23 +168,27 @@ public:
      */
     node insert(const data_type& data, node p_id)
 	{
+        // If there are no freed nodes, create a new node and mark it as freed
 		if(freed_.empty())
 		{
 			freed_.push_back(static_cast<node>(graph_.size()));
 			graph_.push_back(director()); data_.push_back(data);
 		}
 
+        // Pop a freed node from the stack
 		node id = freed_.front(); freed_.pop_front();
         director& node   = graph_[id];
         director& parent = graph_[p_id];
 
-
+        // If the parent has a child, update the child's references
         if(parent.child)
         {
+            // Update the next child
             director& nchild = graph_[parent.child];
 		    node.prev_sibling = nchild.prev_sibling;
             nchild.prev_sibling = id;
 
+            // If present, update the previous child
             if(nchild.prev_sibling)
             {
                 director& pchild = graph_[nchild.prev_sibling];
@@ -188,32 +201,39 @@ public:
         node.next_sibling = parent.child;
 		node.child = 0;
 		node.flags = director::VALID;
+        node.depth = parent.depth + 1;
 
 		// Set parent's child
 		parent.child = id;
 
-
+        // Set the data
 		data_[id] = data;
 
 		return id;
 	}
 
     /**
-     * \brief Erase a node in the tree
+     * \brief Erase a node in the tree. O(n)
      * \param id Id of the node to erase
      */
     void erase(node id)
 	{
 		if(id == 0) return;
 
+        // Mark node as invalid and push it to the freed list
 		director& erased = graph_[id];
 		erased.Flags &= ~director::VALID;
 		freed_.push_back(id);
 
-		graph_[erased.parent].Child = erased.Sibling;
+        // Update the parent's child
+		graph_[erased.parent].Child = erased.next_sibling;
 
+        // Update siblings
+        if(erased.next_sibling) graph_[erased.next_sibling].prev_sibling = erased.prev_sibling;
+        if(erased.prev_sibling) graph_[erased.prev_sibling].next_sibling = erased.next_sibling;
+
+        // Erase children - essentially breadth first propagation down the tree
 		node_queue stack{ erased.Child };
-
 		while(stack.empty() == false)
 		{
 			node next = stack.front(); stack.pop_front();
@@ -272,6 +292,29 @@ private:
 
 public:
 
+    class unordered
+    {
+    public:
+        unordered(directed_tree& graph) : graph_(graph), current_(graph.root) { }
+
+        node operator()(node id)
+        {
+            while(!graph_.valid(current_))
+            {
+                ++current_;
+            }
+
+            id = current_;
+            current_ ++;
+
+            return id == graph_.graph_.;
+        }
+
+    private:
+        directed_tree& graph_;
+        node           current_;
+    };
+
     /**
      * \brief Breadth first traversal
      */
@@ -280,16 +323,16 @@ public:
 	public:
 		breadth_first(directed_tree& graph) : graph_(graph), visit_queue_(0) { }
 
-		node operator()(node node)
+		node operator()(node id)
 		{
-			node = visit_queue_.back(); visit_queue_.pop_back();
-			director& current = graph_.graph_[node];
+			id = visit_queue_.back(); visit_queue_.pop_back();
+			director& current = graph_.graph_[id];
 
 			if(current.next_sibling) visit_queue_.push_back(current.next_sibling);
 			if(current.child) visit_queue_.push_front(current.child);
 
 			if(visit_queue_.empty()) return 0;
-			return node;
+			return id;
 		}
 
 	private:

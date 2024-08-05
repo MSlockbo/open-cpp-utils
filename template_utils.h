@@ -25,51 +25,14 @@ namespace open_cpp_utils
  */
 
 /**
- * \brief Compile-time constant value
- * \tparam T Type
- * \tparam V Value
- */
-template<typename T, T V>
-struct constant_value
-{
-	using type = T;
-	static constexpr type value = V;
-
-	constexpr operator type() const noexcept { return value; }
-	[[nodiscard]] constexpr type operator()() const { return value; }
-};
-
-/**
- * \brief Compile-time constant boolean value
- * \tparam V Value
- */
-template<bool V>
-using bool_constant = constant_value<bool, V>;
-
-using true_type  = bool_constant<true>; //!< Constant True value
-using false_type = bool_constant<false>; //!< Constant False value
-
-/**
- * \brief Check if two types are the same
- */
-template<typename, typename>
-inline static constexpr bool is_same = false_type{};
-
-/**
- * \brief is_same true case for pair of identical types T
- */
-template<typename T>
-inline static constexpr bool is_same<T, T> = true_type{};
-
-/**
  * \brief Check if a sequence of types is unique
  * \tparam Ts
  */
 template<typename...Ts>
-inline static constexpr bool is_unique = true_type{};
+inline static constexpr bool is_unique = std::true_type{};
 
 template<typename T, typename...Ts>
-inline constexpr bool is_unique<T, Ts...> = bool_constant<(!is_same<T, Ts> && ...) && is_unique<Ts...>>{};
+inline constexpr bool is_unique<T, Ts...> = std::bool_constant<(!std::is_same_v<T, Ts> && ...) && is_unique<Ts...>>{};
 
 }
 

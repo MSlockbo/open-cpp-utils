@@ -5,10 +5,10 @@ project(open-cpp-utils)
 set(OPENCPPUTILS_HEADERS
         any.h
         directed_tree.h
+        object_pool.h
         optional.h
         startup.h
         template_utils.h
-        types.h
         unique_id.h
 )
 
