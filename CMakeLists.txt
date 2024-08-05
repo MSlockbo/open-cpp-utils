@@ -16,6 +16,8 @@ add_library(open-cpp-utils INTERFACE
         ${OPENCPPUTILS_HEADERS}
 )
 
+if (GTest_FOUND)
+
 # Set CPP Standard
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_C_STANDARD 23)
@@ -31,6 +33,8 @@ add_executable(open-cpp-utils-test
 target_link_libraries(open-cpp-utils-test PRIVATE
         GTest::gtest
 )
+
+endif ()
 
 # DOXYGEN ==============================================================================================================
 # https://vicrucann.github.io/tutorials/quick-cmake-doxygen/
