@@ -27,6 +27,8 @@ namespace open_cpp_utils
  */
 template<typename...Ts> class any;
 
+template<> class any<> { };
+
 template<typename T, typename...Rest>
 class any<T, Rest...> : public any<Rest...>
 {
@@ -81,9 +83,6 @@ private:
     static constexpr size_t Size = sizeof...(Rest);
     this_type               Value;
 };
-
-template<>
-class any<> { };
 
 }
 
