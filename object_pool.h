@@ -16,18 +16,18 @@
 #ifndef OBJECT_POOL_H
 #define OBJECT_POOL_H
 
-#include <stack>
-#include <vector>
-#include <tuple>
-#include <unordered_map>
-
-#include "template_utils.h"
+#include "dynarray.h"
+#include "optional.h"
 
 namespace open_cpp_utils
 {
 
-template<typename T, typename _Hash = std::unordered_map<uint64_t, int64_t>>
-class object_pool
+/**
+ * \brief
+ * \tparam T
+ */
+template<typename T>
+class object_list
 {
 // Typedefs ============================================================================================================
 
@@ -38,17 +38,10 @@ public:
     using reference       = T&;
     using const_reference = const T&;
 
-    using index_type = int64_t;
     using uuid_type  = uint64_t;
 
 private:
-    using node = std::tuple<value_type, bool>;
-
-
-// Constants ===========================================================================================================
-
-public:
-    static constexpr std::integral_constant<index_type, -1> nullidx{};
+    using node = optional<value_type>;
 
 
 // Functions ===========================================================================================================
@@ -57,32 +50,61 @@ public:
 
 // Constructors & Destructor -------------------------------------------------------------------------------------------
 
-    object_pool();
+    object_list() = default;
+    object_list(const object_list& other) = default;
+    object_list(object_list&& other) = default;
+    ~object_list() = default;
 
-    void clear();
-    void reset();
-    void cleanup();
+
+// Modifiers -----------------------------------------------------------------------------------------------------------
+
+    size_t size() { return data_.size(); }
+
+
+// Modifiers -----------------------------------------------------------------------------------------------------------
+
+    void clear() { data_.clear(); freed_.clear(); }
 
     uuid_type insert(const_reference& value);
     void      erase(uuid_type id);
-    void      erase(index_type idx);
+
+    object_list& operator=(const object_list&) = default;
+    object_list& operator=(object_list&&) = default;
+
 
 // Accessors -----------------------------------------------------------------------------------------------------------
 
-    reference       operator[](uuid_type id);
-    const_reference operator[](uuid_type id) const;
-    bool            operator()(uuid_type id) const;
+    reference       operator[](uuid_type id)       { assert(data_[id]()); return data_[id]; }
+    const_reference operator[](uuid_type id) const { assert(data_[id]()); return data_[id]; }
+    bool            operator()(uuid_type id) const { return data_[id](); }
 
-    reference       operator[](index_type idx);
-    const_reference operator[](index_type idx) const;
-    bool            operator()(index_type idx) const;
+    typename dynarray<node>::iterator begin() { return data_.begin(); }
+    typename dynarray<node>::iterator end()   { return data_.end(); }
 
+
+// Variables ===========================================================================================================
 
 private:
-    std::vector<node>      data_;
-    _Hash                  map_;
-    std::stack<index_type> freed_;
+    dynarray<node>      data_;
+    dynarray<uuid_type> freed_;
 };
+
+template<typename T>
+typename object_list<T>::uuid_type object_list<T>::insert(const_reference value)
+{
+    if(freed_.empty()) { data_.push_back(value); return data_.size() - 1; }
+
+    uuid_type id = freed_.back(); freed_.pop_back();
+    data_[id] = value;
+    return id;
+}
+
+template<typename T>
+void object_list<T>::erase(uuid_type id)
+{
+    data_[id].reset();
+    freed_.push_back(id);
+}
 
 } // open_cpp_utils
 

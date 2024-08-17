@@ -42,7 +42,7 @@ public:
     class unordered;
 
 private:
-    struct director;
+    struct Node_;
 
 
 // Typedefs ============================================================================================================
@@ -53,7 +53,7 @@ public:
 	using node_queue = std::deque<node>;
 
 private:
-    using hierarchy = std::vector<director>;
+    using hierarchy = std::vector<Node_>;
     using storage   = std::vector<data_type>;
 
 
@@ -66,7 +66,7 @@ public:
 // Data Structures =====================================================================================================
 
 private:
-	struct director
+	struct Node_
 	{
 		enum flags
 		{
@@ -76,7 +76,7 @@ private:
 		node parent, child, prev_sibling, next_sibling;
 		uint32_t flags, depth;
 
-		director() : parent(0), child(0), prev_sibling(0), next_sibling(0), flags(VALID), depth(0) { }
+		Node_() : parent(0), child(0), prev_sibling(0), next_sibling(0), flags(VALID), depth(0) { }
 	};
 
 
@@ -89,7 +89,7 @@ public:
     /**
      * \brief Default constructor, creates tree with empty root
      */
-    directed_tree() : graph_{ director() }, data_{ data_type() }, freed_{ } { }
+    directed_tree() : graph_{ Node_() }, data_{ data_type() }, freed_{ } { }
 
 
 // Tree Navigation -----------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ public:
      * \param id Node id to reference
      * \return Whether the valid flag is true in the node
      */
-    [[nodiscard]] bool valid(node id) const { return graph_[id].flags & director::VALID; }
+    [[nodiscard]] bool valid(node id) const { return graph_[id].flags & Node_::VALID; }
 
     /**
      * \brief Get the parent of a node. O(1)
@@ -114,6 +114,20 @@ public:
      * \return Node id of the first child
      */
     [[nodiscard]] node first_child(node id) const { return graph_[id].child; }
+
+    /**
+     * \brief Get the first child of a node. O(1)
+     * \param id Node id to reference
+     * \return Node id of the first child
+     */
+    [[nodiscard]] node last_child(node id) const
+    {
+        node c = first_child(id);
+
+        while(c != 0) { if(graph_[c].next_sibling == 0) break; c = graph_[c].next_sibling; }
+
+        return c;
+    }
 
     /**
      * \brief Get the previous sibling of a node. O(1)
@@ -164,47 +178,63 @@ public:
      * \brief Insert a node into the tree as a child of the provided node
      * \param data Value to insert
      * \param p_id Id of the parent node
+     * \param last Whether to insert at the back of the array
      * \return Id of the inserted node
      */
-    node insert(const data_type& data, node p_id)
+    node insert(const data_type& data, node p_id, bool last = true)
 	{
         // If there are no freed nodes, create a new node and mark it as freed
 		if(freed_.empty())
 		{
 			freed_.push_back(static_cast<node>(graph_.size()));
-			graph_.push_back(director()); data_.push_back(data);
+			graph_.push_back(Node_()); data_.push_back(data);
 		}
 
         // Pop a freed node from the stack
 		node id = freed_.front(); freed_.pop_front();
-        director& node   = graph_[id];
-        director& parent = graph_[p_id];
+        Node_& node   = graph_[id];
+        Node_& parent = graph_[p_id];
 
         // If the parent has a child, update the child's references
-        if(parent.child)
+        if(parent.child && !last)
         {
             // Update the next child
-            director& nchild = graph_[parent.child];
+            Node_& nchild = graph_[parent.child];
 		    node.prev_sibling = nchild.prev_sibling;
             nchild.prev_sibling = id;
 
             // If present, update the previous child
             if(nchild.prev_sibling)
             {
-                director& pchild = graph_[nchild.prev_sibling];
+                Node_& pchild = graph_[nchild.prev_sibling];
                 pchild.next_sibling = id;
             }
         }
 
         // Setup node
 		node.parent = p_id;
-        node.next_sibling = parent.child;
+        node.next_sibling = last ? 0 : parent.child;
 		node.child = 0;
-		node.flags = director::VALID;
+		node.flags = Node_::VALID;
         node.depth = parent.depth + 1;
 
 		// Set parent's child
-		parent.child = id;
+        if(last)
+        {
+            directed_tree::node idx = last_child(p_id);
+
+            if(idx)
+            {
+                Node_& lchild = graph_[idx];
+                lchild.next_sibling = id;
+                node.prev_sibling = idx;
+            }
+            else
+            {
+                parent.child = id;
+            }
+        }
+		else parent.child = id;
 
         // Set the data
 		data_[id] = data;
@@ -221,8 +251,8 @@ public:
 		if(id == 0) return;
 
         // Mark node as invalid and push it to the freed list
-		director& erased = graph_[id];
-		erased.Flags &= ~director::VALID;
+		Node_& erased = graph_[id];
+		erased.Flags &= ~Node_::VALID;
 		freed_.push_back(id);
 
         // Update the parent's child
@@ -237,8 +267,8 @@ public:
 		while(stack.empty() == false)
 		{
 			node next = stack.front(); stack.pop_front();
-			director& child = graph_[next];
-			child.Flags &= ~director::VALID;
+			Node_& child = graph_[next];
+			child.Flags &= ~Node_::VALID;
 			freed_.push_back(next);
 
 			if(child.Sibling) stack.push_front(child.Sibling);
@@ -326,7 +356,7 @@ public:
 		node operator()(node id)
 		{
 			id = visit_queue_.back(); visit_queue_.pop_back();
-			director& current = graph_.graph_[id];
+			Node_& current = graph_.graph_[id];
 
 			if(current.next_sibling) visit_queue_.push_back(current.next_sibling);
 			if(current.child) visit_queue_.push_front(current.child);
@@ -351,7 +381,7 @@ public:
 
 		node operator()(node id)
 		{
-			director& current = graph_.graph_[id];
+			Node_& current = graph_.graph_[id];
 
 			if(current.next_sibling) visit_queue_.push_front(current.next_sibling);
 			if(current.child) visit_queue_.push_front(current.child);
@@ -375,12 +405,12 @@ public:
 	public:
 		in_order(directed_tree& graph) : graph_(graph) { }
 
-		node operator()(node node)
+		node operator()(node id)
 		{
-			if(node == 0) visit_queue_.push_back(graph_.left_most(node));
+			if(id == 0) visit_queue_.push_back(graph_.left_most(id));
 
-			node = visit_queue_.front(); visit_queue_.pop_front();
-			director& current = graph_.graph_[node];
+			id = visit_queue_.front(); visit_queue_.pop_front();
+			Node_& current = graph_.graph_[id];
 
 			if(current.Sibling)
 			{
@@ -388,7 +418,7 @@ public:
 				visit_queue_.push_back(graph_.left_most(current.Sibling));
 			}
 
-			return node;
+			return id;
 		}
 
 	private:
@@ -405,17 +435,17 @@ public:
 	public:
 		post_order(directed_tree& graph) : graph_(graph) { }
 
-		node operator()(node node)
+		node operator()(node id)
 		{
-			if(visit_queue_.empty()) visit_queue_.push_back(graph_.left_most(node));
+			if(visit_queue_.empty()) visit_queue_.push_back(graph_.left_most(id));
 
-			node = visit_queue_.front(); visit_queue_.pop_front();
-			if(node == 0) return node;
-			director& current = graph_.graph_[node];
+			id = visit_queue_.front(); visit_queue_.pop_front();
+			if(id == 0) return id;
+			Node_& current = graph_.graph_[id];
 
-			visit_queue_.push_back(current.Sibling ? graph_.left_most(current.Sibling) : graph_.parent(node));
+			visit_queue_.push_back(current.Sibling ? graph_.left_most(current.Sibling) : graph_.parent(id));
 
-			return node;
+			return id;
 		}
 
 	private:
@@ -438,10 +468,10 @@ public:
 
 		void operator()()
 		{
-			node node = 0;
-			while(node = order_(node))
+			node id = 0;
+			while(id = order_(id))
 			{
-				if(visitor_(graph_[node], node)) break;
+				if(visitor_(graph_[id], id)) break;
 			}
 		}
 

@@ -10,6 +10,12 @@ set(OPENCPPUTILS_HEADERS
         startup.h
         template_utils.h
         unique_id.h
+        dynarray.h
+        redec.h
+        hash_table.h
+        math.h
+        set.h
+        map.h
 )
 
 add_library(open-cpp-utils INTERFACE

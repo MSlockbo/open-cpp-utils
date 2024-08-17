@@ -65,8 +65,15 @@ public:
 public:
 
 // Assignment operators ------------------------------------------------------------------------------------------------
+
     any& operator=(const any&) = default;
     any& operator=(any&&)      = default;
+
+
+// Access --------------------------------------------------------------------------------------------------------------
+
+    template<typename V>
+    V& get() { static_assert(std::disjunction<std::is_same<V, T>, std::is_same<V, Rest>...>{}); return static_cast<V&>(*this); }
 
 
 // Cast operators ------------------------------------------------------------------------------------------------------

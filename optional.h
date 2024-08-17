@@ -26,7 +26,7 @@ namespace open_cpp_utils
     public:
         using value_type = T;
 
-        optional() : data_(), valid_(false) { }
+        optional() : valid_(false) { }
         optional(const value_type& data) : data_(data), valid_(true) { }
         optional(value_type&& data) : data_(data), valid_(true) { }
         optional(const optional& other) = default;
