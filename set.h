@@ -16,12 +16,16 @@
 #ifndef SET_H
 #define SET_H
 
+#include <set>
+
 #include "hash_table.h"
 
 namespace open_cpp_utils
 {
 
 template<typename T, class Hash = std::hash<T>, class Alloc = std::allocator<T>> using set = hash_table<T, Hash, Alloc>;
+
+template<typename T, class Compare = std::less<T>, class Alloc = std::allocator<T>> using ordered_set = std::set<T, Compare, Alloc>;
 
 }
 
