@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef SET_H
-#define SET_H
+#ifndef OPEN_CPP_UTILS_SET_H
+#define OPEN_CPP_UTILS_SET_H
 
 #include <set>
 
@@ -29,4 +29,4 @@ template<typename T, class Compare = std::less<T>, class Alloc = std::allocator<
 
 }
 
-#endif //SET_H
+#endif // OPEN_CPP_UTILS_SET_H

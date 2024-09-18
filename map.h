@@ -13,8 +13,11 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef MAP_H
-#define MAP_H
+#ifndef OPEN_CPP_UTILS_MAP_H
+#define OPEN_CPP_UTILS_MAP_H
+
+#include <utility>
+
 #include "set.h"
 
 namespace open_cpp_utils
@@ -26,12 +29,9 @@ class map
 // Typedefs ============================================================================================================
 
 public:
-    struct hash { size_t operator()(const pair_type& pair) const { return std::hash<key_type>{}(pair.first); } };
-
     using key_type   = Key;
     using value_type = Value;
     using pair_type  = std::pair<key_type, value_type>;
-    using table_type = set<pair_type, hash, Alloc>;
 
     using key_pointer         = key_type*;
     using const_key_pointer   = const key_type*;
@@ -42,7 +42,11 @@ public:
     using const_value_pointer   = const value_type*;
     using value_reference       = value_type&;
     using const_value_reference = const value_type&;
-
+    
+    
+    struct hash { size_t operator()(const pair_type& pair) const { return std::hash<key_type>{}(pair.first); } };
+    
+    using table_type = set<pair_type, hash, Alloc>;
     using iterator = typename table_type::iterator;
 
 
@@ -52,9 +56,12 @@ public:
 
 public:
     map()           = default;
+    map(std::initializer_list<pair_type> data) : table_(data) { }
     map(const map&) = default;
     map(map&&)      = default;
     ~map()          = default;
+
+    void reserve(size_t size) { table_.reserve(size); }
 
     void insert(const_key_reference key, const_value_reference value);
     void erase(const_key_reference key);
@@ -97,4 +104,4 @@ typename map<Key, Value, Alloc>::value_reference map<Key, Value, Alloc>::operato
 }
 }
 
-#endif //MAP_H
+#endif // OPEN_CPP_UTILS_MAP_H

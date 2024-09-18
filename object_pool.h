@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef OBJECT_POOL_H
-#define OBJECT_POOL_H
+#ifndef OPEN_CPP_UTILS_OBJECT_POOL_H
+#define OPEN_CPP_UTILS_OBJECT_POOL_H
 
 #include "dynarray.h"
 #include "optional.h"
@@ -108,4 +108,4 @@ void object_list<T>::erase(uuid_type id)
 
 } // open_cpp_utils
 
-#endif //OBJECT_POOL_H
+#endif // OPEN_CPP_UTILS_OBJECT_POOL_H

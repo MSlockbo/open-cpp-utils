@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef MATH_H
-#define MATH_H
+#ifndef OPEN_CPP_UTILS_MATH_H
+#define OPEN_CPP_UTILS_MATH_H
 
 #include <cmath>
 
@@ -28,7 +28,7 @@ bool is_prime(T x)
     if(x == 2     || x == 3)     return true;
     if(x % 2 == 0 || x % 3 == 0) return false;
 
-    T limit = sqrt(x);
+    T limit = static_cast<T>(sqrt(x));
     for(T i = 5; i <= limit; i += 6)
     {
         if(x % i == 0 || x % (i + 2) == 0) return false;
@@ -39,4 +39,4 @@ bool is_prime(T x)
 
 }
 
-#endif //MATH_H
+#endif // OPEN_CPP_UTILS_MATH_H

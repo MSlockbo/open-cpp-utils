@@ -13,11 +13,13 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef HASH_TABLE_H
-#define HASH_TABLE_H
+#ifndef OPEN_CPP_UTILS_HASH_TABLE_H
+#define OPEN_CPP_UTILS_HASH_TABLE_H
 
 #include <memory>
 #include <type_traits>
+#include <cstdarg>
+#include <utility>
 
 #include "math.h"
 #include "optional.h"
@@ -64,7 +66,80 @@ private:
         int         psl;
 
         _Node() : value(), psl(0) { }
+
+        bool operator==(const _Node& b) const
+        {
+            return value == b.value && psl == b.psl;
+        }
     };
+
+
+    // Iterators ===========================================================================================================
+
+public:
+    class iterator
+    {
+    public:
+        iterator(hash_table* table, size_type idx) : table_(table), idx_(idx) { _next_index(); }
+        iterator(const iterator& b) : table_(b.table_), idx_(b.idx_) { }
+        iterator(iterator&& b) noexcept : table_(b.table_), idx_(b.idx_) { }
+        ~iterator() = default;
+
+        iterator& operator=(const iterator& b)     { if(&b == this) return *this; table_ = b.table_; idx_ = b.idx_; return *this; }
+        iterator& operator=(iterator&& b) noexcept { if(&b == this) return *this; table_ = b.table_; idx_ = b.idx_; return *this; };
+
+        iterator& operator++() { ++idx_; _next_index(); return *this; }
+        iterator  operator++(int) { iterator ret = *this; ++idx_; _next_index(); return ret; }
+
+        bool operator==(const iterator& o) const = default;
+        bool operator!=(const iterator& o) const = default;
+
+        reference operator*()  const { return table_->table_[idx_].value; }
+        pointer   operator->() const { return &*table_->table_[idx_].value; }
+
+    private:
+        void _next_index()
+        {
+            while(idx_ < table_->capacity_ && not table_->table_[idx_].value())
+                ++idx_;
+        }
+
+        hash_table* table_;
+        size_type   idx_;
+    };
+    
+    class const_iterator
+    {
+    public:
+        const_iterator(const hash_table* table, node idx) : table_(table), idx_(idx) { _next_index(); }
+        const_iterator(const const_iterator& b) : table_(b.table_), idx_(b.idx_) { }
+        const_iterator(const_iterator&& b) noexcept : table_(b.table_), idx_(b.idx_) { }
+        ~const_iterator() = default;
+
+        const_iterator& operator=(const const_iterator& b)     { if(&b == this) return *this; table_ = b.table_; idx_ = b.idx_; return *this; }
+        const_iterator& operator=(const_iterator&& b) noexcept { if(&b == this) return *this; table_ = b.table_; idx_ = b.idx_; return *this; };
+
+        const_iterator& operator++() { ++idx_; _next_index(); return *this; }
+        const_iterator  operator++(int) { const_iterator ret = *this; ++idx_; _next_index(); return ret; }
+
+        bool operator==(const const_iterator& o) const = default;
+        bool operator!=(const const_iterator& o) const = default;
+
+        reference operator*()  const { return  table_->table_[idx_].value; }
+        pointer   operator->() const { return &*table_->table_[idx_].value; }
+
+    private:
+        void _next_index() { while(idx_ < table_->capacity_ && not table_->table_[idx_].value()) ++idx_; }
+
+        const hash_table* table_;
+        node        idx_;
+    };
+
+    iterator begin() { return iterator(this, 0);        }
+    iterator end()   { return iterator(this, capacity_); }
+
+    const_iterator begin() const { return const_iterator(this, 0); }
+    const_iterator end() const { return const_iterator(this, capacity_); }
 
 
 // Functions ===========================================================================================================
@@ -74,17 +149,32 @@ public:
 // Constructors & Destructor -------------------------------------------------------------------------------------------
 
     hash_table() : table_(nullptr), capacity_(0), size_(0), load_factor_(0.8), hash_(), alloc_() { }
+    hash_table(std::initializer_list<value_type> data);
     hash_table(const hash_table&);
     hash_table(hash_table&&) = default; // Default Move Constructor should suffice
     ~hash_table() { clear(); }
 
 // Modifiers -----------------------------------------------------------------------------------------------------------
 
+    void reserve(size_t size);
     void clear();
     void insert(const_reference x);
     void erase(const_reference x);
     bool contains(const_reference x);
-    iterator find(const_reference x) const { node res = _find(x); return iterator(this, res == nullnode ? capacity_ : res); }
+    
+    iterator find(const_reference x)
+    {
+        node res = _find(x);
+        if(res == nullnode) res = capacity_;
+        return iterator(this, res);
+    }
+    
+    const_iterator find(const_reference x) const
+    {
+        node res = _find(x);
+        if(res == nullnode) res = capacity_;
+        return const_iterator(this, res);
+    }
 
 // Modifiers -----------------------------------------------------------------------------------------------------------
 
@@ -107,36 +197,6 @@ private:
     static size_type _prev_prime(size_type x);
 
 
-// Iterators ===========================================================================================================
-
-    class iterator
-    {
-    public:
-        iterator(hash_table* table, int idx) : table_(table), idx_(idx) { _next_index(); }
-        iterator(const iterator&) = default;
-        iterator(iterator&&) = default;
-        ~iterator() = default;
-
-        iterator& operator++() { ++idx_; _next_index(); return *this; }
-        iterator  operator++(int) { iterator ret = *this; ++idx_; _next_index(); return ret; }
-
-        bool operator==(const iterator& o) const = default;
-        bool operator!=(const iterator& o) const = default;
-
-        reference operator*()  const { return  table_->table_[idx_].value; }
-        pointer   operator->() const { return &table_->table_[idx_].value; }
-
-    private:
-        void _next_index() { while(idx_ < table_->capacity_ && table_[idx_].value()) ++idx_; }
-
-        hash_table* table_;
-        int         idx_;
-    };
-
-    iterator begin() { return iterator(this, 0);        }
-    iterator end()   { return iterator(this, capacity_); }
-
-
 // Variables ===========================================================================================================
 
 private:
@@ -148,6 +208,14 @@ private:
 };
 
 template<typename T, class Hash, class Alloc>
+hash_table<T, Hash, Alloc>::hash_table(std::initializer_list<value_type> data)
+    : hash_table()
+{
+    reserve(data.size());
+    for(value_type val : data) { insert(val); }
+}
+
+template<typename T, class Hash, class Alloc>
 hash_table<T, Hash, Alloc>::hash_table(const hash_table& other)
     : table_(nullptr)
     , capacity_(other.capacity_)
@@ -155,6 +223,24 @@ hash_table<T, Hash, Alloc>::hash_table(const hash_table& other)
     , load_factor_(0.8)
 {
 
+}
+
+template<typename T, class Hash, class Alloc>
+void hash_table<T, Hash, Alloc>::reserve(size_t size)
+{
+    table_type old = table_;
+    size_type  old_capacity = capacity_;
+    capacity_ = _next_prime(size);
+    table_    = alloc_.allocate(capacity_);
+    memset(table_, 0, capacity_ * sizeof(_Node));
+    size_ = 0;
+
+    for(size_type i = 0; i < old_capacity; ++i)
+    {
+        if(old[i].value()) insert(old[i].value);
+    }
+
+    alloc_.deallocate(old, old_capacity);
 }
 
 template<typename T, class Hash, class Alloc>
@@ -171,20 +257,25 @@ void hash_table<T, Hash, Alloc>::insert(const_reference x)
 
     node idx = _hash(x);
     int  psl = 0;
-    T  value = x;
+    T    val = x;
 
     while(table_[idx].value())
     {
         _Node& node = table_[idx];
 
         if(node.value == x) return;
-        if(psl > node.psl) { std::swap(psl, node.psl); std::swap(value, node.value); }
+        if(psl > node.psl)
+        {
+            // std::swap(psl, node.psl); std::swap(value, node.value);
+            int temp_psl = psl;        psl = node.psl;   node.psl = temp_psl;
+            T   temp_val = node.value; node.value = val; val = temp_val;
+        }
 
         idx = _next(idx);
         ++psl;
     }
 
-    table_[idx].value = value;
+    table_[idx].value = val;
     table_[idx].psl   = psl;
     ++size_;
 }
@@ -218,12 +309,13 @@ void hash_table<T, Hash, Alloc>::_increase_capacity()
 {
     table_type old = table_;
     size_type  old_capacity = capacity_;
+    alloc_.deallocate(table_, capacity_);
     capacity_ = _next_prime(capacity_);
     table_    = alloc_.allocate(capacity_);
     memset(table_, 0, capacity_ * sizeof(_Node));
     size_ = 0;
 
-    for(node i = 0; i < old_capacity; ++i)
+    for(size_type i = 0; i < old_capacity; ++i)
     {
         if(old[i].value()) insert(old[i].value);
     }
@@ -242,7 +334,7 @@ typename hash_table<T, Hash, Alloc>::node hash_table<T, Hash, Alloc>::_hash(cons
     x *= UINT64_C(0xc4ceb9fe1a85ec53);
     x ^= x >> 33U;
 
-    return x;
+    return x % capacity_;
 }
 
 template<typename T, class Hash, class Alloc>
@@ -297,4 +389,4 @@ typename hash_table<T, Hash, Alloc>::size_type hash_table<T, Hash, Alloc>::_prev
 
 }
 
-#endif //HASH_TABLE_H
+#endif // OPEN_CPP_UTILS_HASH_TABLE_H

@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef ANY_H
-#define ANY_H
+#ifndef OPEN_CPP_UTILS_ANY_H
+#define OPEN_CPP_UTILS_ANY_H
 
 #include "template_utils.h"
 
@@ -34,7 +34,7 @@ class any<T, Rest...> : public any<Rest...>
 {
 // Assertions ==========================================================================================================
 
-    static_assert(is_unique<Rest...>);
+    static_assert(is_unique<T, Rest...>);
 
 
 // Typedefs ============================================================================================================
@@ -94,4 +94,4 @@ private:
 }
 
 
-#endif //ANY_H
+#endif // OPEN_CPP_UTILS_ANY_H

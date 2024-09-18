@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef ENGINE_UNIQUEID_H
-#define ENGINE_UNIQUEID_H
+#ifndef OPEN_CPP_UTILS_UNIQUE_ID_H
+#define OPEN_CPP_UTILS_UNIQUE_ID_H
 
 #include <cstdint>
 
@@ -53,4 +53,4 @@ template<typename Base, typename Type> uint64_t unique_id()
 
 }
 
-#endif //ENGINE_UNIQUEID_H
+#endif // OPEN_CPP_UTILS_UNIQUE_ID_H

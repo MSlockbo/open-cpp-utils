@@ -13,9 +13,9 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef REDEC_H
-#define REDEC_H
+#ifndef OPEN_CPP_UTILS_REDEC_H
+#define OPEN_CPP_UTILS_REDEC_H
 
 #include "dynarray.h"
 
-#endif //REDEC_H
+#endif // OPEN_CPP_UTILS_REDEC_H

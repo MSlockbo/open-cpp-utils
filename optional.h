@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef OPTIONAL_H
-#define OPTIONAL_H
+#ifndef OPEN_CPP_UTILS_OPTIONAL_H
+#define OPEN_CPP_UTILS_OPTIONAL_H
 
 #include <assert.h>
 
@@ -38,6 +38,12 @@ namespace open_cpp_utils
 	    optional& operator=(const value_type& data) { data_ = data; valid_ = true; return *this; }
 	    optional& operator=(value_type&& data) { data_ = data; valid_ = true; return *this; }
 
+        bool operator==(const optional& b) const
+	    {
+	        if(not(valid_ || b.valid_)) return valid_ == b.valid_;
+	        return data_ == b.data_;
+	    }
+
         value_type& operator+=(const value_type& data) { assert(valid_); data_ += data; return data_; }
         value_type& operator-=(const value_type& data) { assert(valid_); data_ += data; return data_; }
         value_type& operator*=(const value_type& data) { assert(valid_); data_ += data; return data_; }
@@ -51,6 +57,8 @@ namespace open_cpp_utils
         value_type& operator^=(const value_type& data)  { assert(valid_); data_ ^= data;  return data_; }
 
         [[nodiscard]] bool operator()() const { return valid_; }
+
+        operator value_type() const { assert(valid_); return data_; }
 
         operator       value_type&()       { assert(valid_); return data_; }
         operator const value_type&() const { assert(valid_); return data_; }
@@ -69,4 +77,4 @@ namespace open_cpp_utils
     };
 }
 
-#endif //OPTIONAL_H
+#endif // OPEN_CPP_UTILS_OPTIONAL_H

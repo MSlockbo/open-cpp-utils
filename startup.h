@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef STARTUP_H
-#define STARTUP_H
+#ifndef OPEN_CPP_UTILS_STARTUP_H
+#define OPEN_CPP_UTILS_STARTUP_H
 
 #ifdef __cplusplus
 #define STARTUP(f) \
@@ -39,4 +39,4 @@
         static void f(void)
 #endif
 
-#endif //STARTUP_H
+#endif // OPEN_CPP_UTILS_STARTUP_H

@@ -13,11 +13,12 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef DIRECTEDGRAPH_H
-#define DIRECTEDGRAPH_H
+#ifndef OPEN_CPP_UTILS_DIRECTED_TREE_H
+#define OPEN_CPP_UTILS_DIRECTED_TREE_H
 
 #include <vector>
 #include <deque>
+#include <algorithm>
 
 namespace open_cpp_utils
 {
@@ -90,6 +91,11 @@ public:
      * \brief Default constructor, creates tree with empty root
      */
     directed_tree() : graph_{ Node_() }, data_{ data_type() }, freed_{ } { }
+    
+    directed_tree(data_type&& data) : graph_{ Node_() }, data_(data), freed_{} { }
+    directed_tree(const data_type& data) : graph_{ Node_() }, data_(data), freed_{} { }
+
+    ~directed_tree() = default;
 
 
 // Tree Navigation -----------------------------------------------------------------------------------------------------
@@ -129,6 +135,15 @@ public:
         return c;
     }
 
+    [[nodiscard]] int child_index(node id)
+    {
+        if(id == root) return -1;
+
+        int i = 0;
+        while(id != root) { id = prev_sibling(id); ++i; }
+        return i;
+    }
+
     /**
      * \brief Get the previous sibling of a node. O(1)
      * \param id Node id to reference
@@ -160,19 +175,20 @@ public:
      * \param id
      * \return
      */
-    [[nodiscard]] uint32_t depth(node id) const
-	{
-		uint32_t depth = 0;
-		while (id)
-		{
-			id = parent(id);
-			++depth;
-		}
-		return depth;
-	}
+    [[nodiscard]] uint32_t depth(node id) const { return graph_[id].depth; }
 
 
 // Tree Modification ---------------------------------------------------------------------------------------------------
+
+    /**
+     * \brief Get the next id that would be used if insert() were called
+     * \return Next node id
+     */
+    node next_id() const
+    {
+        if(freed_.empty()) return static_cast<node>(graph_.size());
+        return freed_.front();
+    }
 
     /**
      * \brief Insert a node into the tree as a child of the provided node
@@ -181,7 +197,7 @@ public:
      * \param last Whether to insert at the back of the array
      * \return Id of the inserted node
      */
-    node insert(const data_type& data, node p_id, bool last = true)
+    node insert(const data_type& data, node p_id, int child = 0)
 	{
         // If there are no freed nodes, create a new node and mark it as freed
 		if(freed_.empty())
@@ -191,56 +207,57 @@ public:
 		}
 
         // Pop a freed node from the stack
-		node id = freed_.front(); freed_.pop_front();
+		node id   = freed_.front(); freed_.pop_front();
+        node s_id = first_child(p_id);
         Node_& node   = graph_[id];
         Node_& parent = graph_[p_id];
+        bool back = s_id == 0 ? false : child < 0;
 
-        // If the parent has a child, update the child's references
-        if(parent.child && !last)
+        while(child > 0 && s_id != root)
         {
-            // Update the next child
-            Node_& nchild = graph_[parent.child];
-		    node.prev_sibling = nchild.prev_sibling;
-            nchild.prev_sibling = id;
-
-            // If present, update the previous child
-            if(nchild.prev_sibling)
-            {
-                Node_& pchild = graph_[nchild.prev_sibling];
-                pchild.next_sibling = id;
-            }
+            s_id = next_sibling(s_id); --child;
+            back |= (s_id == root);
         }
 
-        // Setup node
-		node.parent = p_id;
-        node.next_sibling = last ? 0 : parent.child;
-		node.child = 0;
-		node.flags = Node_::VALID;
+        Node_& sibling = graph_[s_id];
+        if(s_id == parent.child && !back) parent.child = id;
+
+        node.next_sibling = node.prev_sibling = 0;
+        node.parent = p_id;
         node.depth = parent.depth + 1;
+        node.flags = Node_::VALID;
+        node.child = 0;
 
-		// Set parent's child
-        if(last)
+        if(s_id == 0) return id;
+
+        if(back)
         {
-            directed_tree::node idx = last_child(p_id);
+            node.next_sibling = sibling.next_sibling;
+            node.prev_sibling = s_id;
 
-            if(idx)
-            {
-                Node_& lchild = graph_[idx];
-                lchild.next_sibling = id;
-                node.prev_sibling = idx;
-            }
-            else
-            {
-                parent.child = id;
-            }
+            sibling.next_sibling = id;
         }
-		else parent.child = id;
+        else
+        {
+            node.next_sibling = s_id;
+            node.prev_sibling = sibling.prev_sibling;
 
-        // Set the data
-		data_[id] = data;
+            sibling.prev_sibling = id;
+        }
 
-		return id;
+        return id;
 	}
+
+    void swap(node a, node b)
+    {
+        Node_& A = graph_[a];
+        Node_& B = graph_[b];
+
+        std::swap(A, B);
+
+        if(graph_[B.parent].child == a) graph_[B.parent].child = b;
+        if(graph_[A.parent].child == b) graph_[A.parent].child = a;
+    }
 
     /**
      * \brief Erase a node in the tree. O(n)
@@ -248,31 +265,33 @@ public:
      */
     void erase(node id)
 	{
-		if(id == 0) return;
+		if(id == root) return;
 
         // Mark node as invalid and push it to the freed list
 		Node_& erased = graph_[id];
-		erased.Flags &= ~Node_::VALID;
+		erased.flags &= ~Node_::VALID;
 		freed_.push_back(id);
+        data_[id].~T();
 
         // Update the parent's child
-		graph_[erased.parent].Child = erased.next_sibling;
+		graph_[erased.parent].child = erased.next_sibling;
 
         // Update siblings
         if(erased.next_sibling) graph_[erased.next_sibling].prev_sibling = erased.prev_sibling;
         if(erased.prev_sibling) graph_[erased.prev_sibling].next_sibling = erased.next_sibling;
 
         // Erase children - essentially breadth first propagation down the tree
-		node_queue stack{ erased.Child };
+		node_queue stack{ erased.child };
 		while(stack.empty() == false)
 		{
 			node next = stack.front(); stack.pop_front();
 			Node_& child = graph_[next];
-			child.Flags &= ~Node_::VALID;
+			child.flags &= ~Node_::VALID;
 			freed_.push_back(next);
+            data_[next].~T();
 
-			if(child.Sibling) stack.push_front(child.Sibling);
-			if(child.Child) stack.push_front(child.Child);
+			if(child.next_sibling) stack.push_front(child.next_sibling);
+			if(child.child)        stack.push_front(child.child);
 		}
 	}
 
@@ -483,4 +502,4 @@ public:
 };
 }
 
-#endif //DIRECTEDGRAPH_H
+#endif // OPEN_CPP_UTILS_DIRECTED_TREE_H

@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef TEMPLATEUTILS_H
-#define TEMPLATEUTILS_H
+#ifndef OPEN_CPP_UTILS_TEMPLATE_UTILS_H
+#define OPEN_CPP_UTILS_TEMPLATE_UTILS_H
 
 namespace open_cpp_utils
 {
@@ -36,4 +36,4 @@ inline constexpr bool is_unique<T, Ts...> = std::bool_constant<(!std::is_same_v<
 
 }
 
-#endif //TEMPLATEUTILS_H
+#endif // OPEN_CPP_UTILS_TEMPLATE_UTILS_H

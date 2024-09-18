@@ -13,8 +13,8 @@
 // limitations under the License.
 // =====================================================================================================================
 
-#ifndef DYNARRAY_H
-#define DYNARRAY_H
+#ifndef OPEN_CPP_UTILS_DYNARRAY_H
+#define OPEN_CPP_UTILS_DYNARRAY_H
 
 #include <memory>
 #include <vector>
@@ -27,4 +27,4 @@ using dynarray = std::vector<T, Alloc>;
 
 }
 
-#endif //DYNARRAY_H
+#endif // OPEN_CPP_UTILS_DYNARRAY_H
