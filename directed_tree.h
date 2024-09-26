@@ -19,6 +19,7 @@
 #include <vector>
 #include <deque>
 #include <algorithm>
+#include <cstring>
 
 namespace open_cpp_utils
 {
@@ -30,7 +31,7 @@ namespace open_cpp_utils
  * The tree is a series of child nodes in forward linked lists.
  *
  */
-template<typename T>
+template<typename T, class Alloc = std::allocator<T>>
 class directed_tree
 {
 // Forward Definitions =================================================================================================
@@ -50,12 +51,14 @@ private:
 
 public:
 	using data_type  = T;
-	using node       = uint32_t;
+	using node       = size_t;
 	using node_queue = std::deque<node>;
 
 private:
-    using hierarchy = std::vector<Node_>;
-    using storage   = std::vector<data_type>;
+    using s_alloc   = Alloc;
+    using h_alloc   = typename std::allocator_traits<s_alloc>::template rebind_alloc<Node_>; // Gross
+    using hierarchy = Node_*;
+    using storage   = data_type*;
 
 
 // Constants ===========================================================================================================
@@ -71,17 +74,74 @@ private:
 	{
 		enum flags
 		{
-			VALID = 0x0001
+			valid = 0x0001
 		};
 
 		node parent, child, prev_sibling, next_sibling;
 		uint32_t flags, depth;
 
-		Node_() : parent(0), child(0), prev_sibling(0), next_sibling(0), flags(VALID), depth(0) { }
+		Node_() : parent(0), child(0), prev_sibling(0), next_sibling(0), flags(0), depth(0) { }
 	};
 
 
 // Functions ===========================================================================================================
+
+private:
+
+// Helpers -------------------------------------------------------------------------------------------------------------
+
+    void grow_()
+    {
+        hierarchy g_old = graph_;
+        storage   d_old = data_;
+        size_t    c_old = capacity_;
+
+        if(capacity_ == 0) capacity_  = 10;
+        else               capacity_ *= 2;
+
+        graph_ = g_alloc_.allocate(capacity_);
+        data_  = d_alloc_.allocate(capacity_);
+
+        if(size_ > 0)
+        {
+            std::memcpy(graph_, g_old, size_ * sizeof(Node_));
+            std::memcpy(data_,  d_old, size_ * sizeof(data_type));
+
+            for(node i = size_; i < capacity_; ++i)
+            {
+                graph_[i] = Node_();
+                std::construct_at(data_ + i);
+            }
+        }
+        else
+        {
+            for(node i = 0; i < capacity_; ++i)
+            {
+                graph_[i] = Node_();
+                std::construct_at(data_ + i);
+            }
+
+            graph_[0].flags = Node_::valid;
+        }
+
+        g_alloc_.deallocate(g_old, c_old);
+        d_alloc_.deallocate(d_old, c_old);
+    }
+
+    node push_back_(const data_type& data)
+    {
+        if(size_ >= capacity_) grow_();
+        std::construct_at(data_ + size_, data);
+        return size_++;
+    }
+
+    node push_back_(data_type&& data)
+    {
+        if(size_ >= capacity_) grow_();
+        std::construct_at(data_ + size_, std::forward<T>(data));
+        return size_++;
+    }
+    
 
 public:
 
@@ -90,10 +150,20 @@ public:
     /**
      * \brief Default constructor, creates tree with empty root
      */
-    directed_tree() : graph_{ Node_() }, data_{ data_type() }, freed_{ } { }
+    directed_tree()
+        : size_(0), capacity_(0)
+        , graph_(nullptr), data_(nullptr)
+    { push_back_(T()); }
     
-    directed_tree(data_type&& data) : graph_{ Node_() }, data_(data), freed_{} { }
-    directed_tree(const data_type& data) : graph_{ Node_() }, data_(data), freed_{} { }
+    directed_tree(data_type&& data)
+        : size_(0), capacity_(0)
+        , graph_(nullptr), data_(nullptr)
+    { push_back_(std::forward<T>(data)); }
+    
+    directed_tree(const data_type& data)
+        : size_(0), capacity_(0)
+        , graph_(nullptr), data_(nullptr)
+    { push_back_(data); }
 
     ~directed_tree() = default;
 
@@ -105,7 +175,7 @@ public:
      * \param id Node id to reference
      * \return Whether the valid flag is true in the node
      */
-    [[nodiscard]] bool valid(node id) const { return graph_[id].flags & Node_::VALID; }
+    [[nodiscard]] bool valid(node id) const { return graph_[id].flags & Node_::valid; }
 
     /**
      * \brief Get the parent of a node. O(1)
@@ -133,15 +203,6 @@ public:
         while(c != 0) { if(graph_[c].next_sibling == 0) break; c = graph_[c].next_sibling; }
 
         return c;
-    }
-
-    [[nodiscard]] int child_index(node id)
-    {
-        if(id == root) return -1;
-
-        int i = 0;
-        while(id != root) { id = prev_sibling(id); ++i; }
-        return i;
     }
 
     /**
@@ -186,7 +247,7 @@ public:
      */
     node next_id() const
     {
-        if(freed_.empty()) return static_cast<node>(graph_.size());
+        if(freed_.empty()) return static_cast<node>(size_);
         return freed_.front();
     }
 
@@ -194,38 +255,35 @@ public:
      * \brief Insert a node into the tree as a child of the provided node
      * \param data Value to insert
      * \param p_id Id of the parent node
-     * \param last Whether to insert at the back of the array
+     * \param sib Child to insert before, passing root specifies to insert to the back
      * \return Id of the inserted node
      */
-    node insert(const data_type& data, node p_id, int child = 0)
-	{
+    node insert(const data_type& data, node p_id, node sib = 0)
+    {
         // If there are no freed nodes, create a new node and mark it as freed
-		if(freed_.empty())
-		{
-			freed_.push_back(static_cast<node>(graph_.size()));
-			graph_.push_back(Node_()); data_.push_back(data);
-		}
-
-        // Pop a freed node from the stack
-		node id   = freed_.front(); freed_.pop_front();
-        node s_id = first_child(p_id);
-        Node_& node   = graph_[id];
-        Node_& parent = graph_[p_id];
-        bool back = s_id == 0 ? false : child < 0;
-
-        while(child > 0 && s_id != root)
+        if(freed_.empty())
         {
-            s_id = next_sibling(s_id); --child;
-            back |= (s_id == root);
+            freed_.push_back(push_back_(std::forward<T>(data)));
+        }
+        else
+        {
+            std::construct_at(data_ + freed_.front(), std::forward<T>(data));
         }
 
+        // Pop a freed node from the stack
+        node id   = freed_.front(); freed_.pop_front();
+        bool back = sib == 0;
+        node s_id = back ? last_child(p_id) : sib;
+        Node_& node   = graph_[id];
+        Node_& parent = graph_[p_id];
+
         Node_& sibling = graph_[s_id];
-        if(s_id == parent.child && !back) parent.child = id;
+        if(parent.child == root || (s_id == parent.child && !back)) parent.child = id;
 
         node.next_sibling = node.prev_sibling = 0;
         node.parent = p_id;
         node.depth = parent.depth + 1;
-        node.flags = Node_::VALID;
+        node.flags = Node_::valid;
         node.child = 0;
 
         if(s_id == 0) return id;
@@ -248,6 +306,61 @@ public:
         return id;
 	}
 
+    /**
+     * \brief Insert a node into the tree as a child of the provided node
+     * \param data Value to insert
+     * \param p_id Id of the parent node
+     * \param sib Child to insert before, passing root specifies to insert to the back
+     * \return Id of the inserted node
+     */
+    node insert(data_type&& data, node p_id, node sib = root)
+    {
+        // If there are no freed nodes, create a new node and mark it as freed
+        if(freed_.empty())
+        {
+            freed_.push_back(push_back_(std::forward<T>(data)));
+        }
+        else
+        {
+            std::construct_at(data_ + freed_.front(), std::forward<T>(data));
+        }
+
+        // Pop a freed node from the stack
+        node id   = freed_.front(); freed_.pop_front();
+        bool back = sib == root;
+        node s_id = back ? last_child(p_id) : sib;
+        Node_& node   = graph_[id];
+        Node_& parent = graph_[p_id];
+
+        Node_& sibling = graph_[s_id];
+        if(parent.child == root || (s_id == parent.child && !back)) parent.child = id;
+
+        node.next_sibling = node.prev_sibling = 0;
+        node.parent = p_id;
+        node.depth = parent.depth + 1;
+        node.flags = Node_::valid;
+        node.child = 0;
+
+        if(s_id == 0) return id;
+
+        if(back)
+        {
+            node.next_sibling = sibling.next_sibling;
+            node.prev_sibling = s_id;
+
+            sibling.next_sibling = id;
+        }
+        else
+        {
+            node.next_sibling = s_id;
+            node.prev_sibling = sibling.prev_sibling;
+
+            sibling.prev_sibling = id;
+        }
+
+        return id;
+    }
+
     void swap(node a, node b)
     {
         Node_& A = graph_[a];
@@ -257,6 +370,22 @@ public:
 
         if(graph_[B.parent].child == a) graph_[B.parent].child = b;
         if(graph_[A.parent].child == b) graph_[A.parent].child = a;
+    }
+
+    void clear()
+    {
+        for(int i = 0; i < size_; ++i)
+        {
+            if(valid(i) == false) continue;
+
+            graph_[i].flags = 0;
+            std::destroy_at(data_ + i);
+            freed_.push_back(i);
+        }
+
+        g_alloc_.deallocate(graph_, capacity_);
+        d_alloc_.deallocate(data_, capacity_);
+        capacity_ = 0; size_ = 0;
     }
 
     /**
@@ -269,9 +398,9 @@ public:
 
         // Mark node as invalid and push it to the freed list
 		Node_& erased = graph_[id];
-		erased.flags &= ~Node_::VALID;
+		erased.flags = 0;
 		freed_.push_back(id);
-        data_[id].~T();
+        std::destroy_at(data_ + id);
 
         // Update the parent's child
 		graph_[erased.parent].child = erased.next_sibling;
@@ -286,9 +415,9 @@ public:
 		{
 			node next = stack.front(); stack.pop_front();
 			Node_& child = graph_[next];
-			child.flags &= ~Node_::VALID;
+			child.flags = 0;
 			freed_.push_back(next);
-            data_[next].~T();
+		    std::destroy_at(data_ + next);
 
 			if(child.next_sibling) stack.push_front(child.next_sibling);
 			if(child.child)        stack.push_front(child.child);
@@ -332,6 +461,9 @@ public:
 // Variables =======================================================================================================
 
 private:
+	h_alloc   g_alloc_;
+    s_alloc   d_alloc_;
+    size_t    size_, capacity_;
 	hierarchy graph_;
 	storage   data_;
 	node_queue freed_;

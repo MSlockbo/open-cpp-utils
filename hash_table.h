@@ -49,7 +49,7 @@ public:
     using allocator_type  = typename std::allocator_traits<Alloc>::template rebind_alloc<_Node>;
 
     using size_type       = size_t;
-    using iterator_type   = iterator;
+    using iterator_type   = class iterator;
 
 private:
     using table_type = _Node*;

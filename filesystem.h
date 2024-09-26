@@ -104,7 +104,8 @@ private:
     { return std::mismatch(path.begin(), path.end(), base.begin(), base.end()).second == base.end(); }
     
     file_id find_(path_t path) const;
-    int get_index_(file_id parent, const path_t& path);
+
+file_id get_index_(file_id parent, const path_t &path);
     
 
 // Constructors & Destructor -------------------------------------------------------------------------------------------
@@ -126,6 +127,7 @@ public:
 
     void rename(file_id id, const std::string& name);
 
+    void clear() { tree_.clear(); }
     void erase(file_id id);
     void erase(const path_t& path);
 
@@ -187,20 +189,19 @@ typename filesystem<T_, L_>::file_id filesystem<T_, L_>::find_(path_t path) cons
 }
 
 template<typename T_, typename L_>
-int filesystem<T_, L_>::get_index_(file_id parent, const path_t &path)
+typename filesystem<T_, L_>::file_id filesystem<T_, L_>::get_index_(file_id parent, const path_t &path)
 {
     file_id dir = tree_.first_child(parent);
 
     // Get the insertion index
-    int i = 0;
     while(dir != file_tree::root)
     {
         if(tree_[dir].path().filename().compare(path.filename()) > 0) break;
 
-        ++i; dir = tree_.next_sibling(dir);
+        dir = tree_.next_sibling(dir);
     }
 
-    return i;
+    return dir;
 }
 
 template<typename T_, typename L_>
@@ -241,7 +242,7 @@ typename filesystem<T_, L_>::file_id filesystem<T_, L_>::load_directory(const pa
         const path_t  path  = *it;
         data = loader::load(path);
 
-        file_id created = tree_.insert(file(this, tree_.next_id(), path, data), p_dir, -1);
+        file_id created = tree_.insert(file(this, tree_.next_id(), path, data), p_dir);
 
         if(is_directory(path))
         {

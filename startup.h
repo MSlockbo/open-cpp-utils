@@ -18,9 +18,9 @@
 
 #ifdef __cplusplus
 #define STARTUP(f) \
-        static void f(void); \
-        struct f##_t_ { f##_t_(void) { f(); } }; inline static f##_t_ f##_; \
-        static void f(void)
+        inline static void f(void); \
+        struct f##_t_ { inline f##_t_(void) { f(); } }; inline static f##_t_ f##_; \
+        inline static void f(void)
 #elif defined(_MSC_VER)
 #pragma section(".CRT$XCU",read)
     #define INITIALIZER2_(f,p) \
